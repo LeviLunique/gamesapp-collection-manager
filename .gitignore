@@ -1,15 +1,95 @@
+# ===============================================
+# Android & Kotlin GitIgnore padrão atualizado
+# Compatível com Jetpack Compose, Room e Gradle KTS
+# ===============================================
+
+# Gradle
+.gradle/
+build/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IntelliJ / Android Studio
+.idea/
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+*.iws
+*.ipr
+*.iml
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/gradle.xml
+.idea/**/assetWizardSettings.xml
+.idea/**/dictionaries
+.idea/**/libraries
+.idea/**/shelf
+.idea/**/misc.xml
+
+# Local properties (contém caminhos específicos e secrets)
 local.properties
+
+# Logs e dumps
+*.log
+*.hprof
+
+# MacOS / Linux / Windows temporários
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+*.swp
+*.tmp
+*.temp
+
+# Cache do Compose / build intermediário
+compose-metrics/
+compose-build/
+
+# Capturas de tela e arquivos gerados
+captures/
+outputs/
+
+# Arquivos de teste gerados
+*.apk
+*.ap_
+
+# Arquivos de travas do Gradle
+.gradle/
+.gradle-cache/
+gradle-app.setting
+
+# Arquivos de backup do editor
+*.bak
+*.orig
+*.rej
+
+# Arquivos de cobertura de testes
+*.ec
+coverage/
+
+# Chaves e configurações sensíveis
+*.keystore
+*.jks
+google-services.json
+
+# Módulos temporários e do Android Test Recorder
+.externalNativeBuild/
+.cxx/
+.idea/caches/
+.idea/libraries/
+.idea/modules.xml
+
+# Arquivos específicos do Android Studio
+*.tmd
+.navigation/
+.vscode/
+.idea_modules/
+
+# ===============================================
+# Personalizações específicas do projeto
+# ===============================================
+# Evita subir build local do app
+app/build/
+
+# Exclui repositórios Gradle locais
+.gradle/
+.gradle-cache/
