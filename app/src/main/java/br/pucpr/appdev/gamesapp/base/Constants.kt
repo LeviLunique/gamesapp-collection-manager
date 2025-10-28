@@ -26,6 +26,7 @@ class Constants {
         val CHECKBOX_SPACING = 8.dp
         val CARD_BORDER_WIDTH = 1.dp
         val CARD_CORNER_RADIUS = 12.dp
+        val CARD_BORDER_WIDTH_SELECTED = 2.dp
 
         const val RATING_MIN = 0
         const val RATING_MAX = 5

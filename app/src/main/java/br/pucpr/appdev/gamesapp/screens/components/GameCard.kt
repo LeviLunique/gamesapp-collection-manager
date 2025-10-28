@@ -1,17 +1,24 @@
 package br.pucpr.appdev.gamesapp.screens.components
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.draw.clip
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.unit.Dp
+import androidx.compose.foundation.layout.size
 import br.pucpr.appdev.gamesapp.R
 import br.pucpr.appdev.gamesapp.base.Constants
 import br.pucpr.appdev.gamesapp.model.GameEntity
@@ -26,22 +33,34 @@ fun GameCard(
     onEdit: () -> Unit,
     onDelete: () -> Unit
 ) {
-    val borderColor =
+    val baseBorderColor = MaterialTheme.colorScheme.outlineVariant
+
+    val targetBorderColor: Color =
         if (selected) MaterialTheme.colorScheme.primary.copy(alpha = Constants.Ui.ALPHA_SELECTED_BORDER)
-        else Color.Transparent
+        else baseBorderColor
+
+    val targetBorderWidth: Dp =
+        if (selected) Constants.Ui.CARD_BORDER_WIDTH_SELECTED
+        else Constants.Ui.CARD_BORDER_WIDTH
+
+    val borderColor by animateColorAsState(
+        targetValue = targetBorderColor,
+        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+        label = "cardBorderColor"
+    )
+    val borderWidth by animateDpAsState(
+        targetValue = targetBorderWidth,
+        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+        label = "cardBorderWidth"
+    )
 
     val shape = RoundedCornerShape(Constants.Ui.CARD_CORNER_RADIUS)
-
-    val borderModifier =
-        if (selected) Modifier.border(Constants.Ui.CARD_BORDER_WIDTH, borderColor, shape)
-        else Modifier
 
     ElevatedCard(
         onClick = onEdit,
         modifier = Modifier
             .fillMaxWidth()
-            .then(borderModifier)
-            .clip(shape),
+            .border(width = borderWidth, brush = SolidColor(borderColor), shape = shape),
         shape = shape,
         colors = CardDefaults.elevatedCardColors(
             containerColor = if (selected)
@@ -67,11 +86,10 @@ fun GameCard(
                 )
 
                 val (container, label) = when (game.status) {
-                    GameStatus.DONE -> Constants.Ui.STATUS_DONE_CONTAINER to Constants.Ui.STATUS_DONE_LABEL
+                    GameStatus.DONE    -> Constants.Ui.STATUS_DONE_CONTAINER to Constants.Ui.STATUS_DONE_LABEL
                     GameStatus.PLAYING -> Constants.Ui.STATUS_PLAYING_CONTAINER to Constants.Ui.STATUS_PLAYING_LABEL
                     GameStatus.BACKLOG -> Constants.Ui.STATUS_BACKLOG_CONTAINER to Constants.Ui.STATUS_BACKLOG_LABEL
                 }
-
                 val statusText = when (game.status) {
                     GameStatus.BACKLOG -> stringResource(R.string.status_backlog)
                     GameStatus.PLAYING -> stringResource(R.string.status_playing)
@@ -101,9 +119,7 @@ fun GameCard(
             Column {
                 Text(
                     text = stringResource(
-                        R.string.label_rating_value,
-                        game.rating,
-                        Constants.Ui.RATING_MAX
+                        R.string.label_rating_value, game.rating, Constants.Ui.RATING_MAX
                     ),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
