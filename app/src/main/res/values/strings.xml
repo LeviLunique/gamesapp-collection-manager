@@ -1,3 +1,60 @@
 <resources>
     <string name="app_name">GamesApp</string>
+
+    <string name="my_games_title_plain">Meus jogos</string>
+
+    <plurals name="games_count">
+        <item quantity="one">%1$d jogo</item>
+        <item quantity="other">%1$d jogos</item>
+    </plurals>
+
+    <string name="label_title">Título</string>
+    <string name="label_platform">Plataforma</string>
+    <string name="label_title_value">Título: %1$s</string>
+    <string name="label_platform_value">Plataforma: %1$s</string>
+    <string name="label_status">Status</string>
+    <string name="label_rating">Nota</string>
+    <string name="label_rating_value">Nota %1$d/%2$d</string>
+
+    <string name="status_backlog">Backlog</string>
+    <string name="status_playing">Jogando</string>
+    <string name="status_done">Concluído</string>
+
+    <string name="action_save">Salvar</string>
+    <string name="action_save_changes">Salvar alterações</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_delete">Excluir</string>
+
+    <string name="my_games_title">Meus Jogos (%1$d)</string>
+    <string name="cd_rating_star">Estrela de avaliação</string>
+    <string name="cd_delete">Excluir jogo</string>
+    <string name="cd_status">Status: %1$s</string>
+
+    <string name="cd_open_menu">Abrir menu</string>
+    <string name="cd_more_options">Mais opções</string>
+    <string name="action_add">Adicionar</string>
+    <string name="action_search">Pesquisar</string>
+    <string name="action_sort_asc">Ordenar ascendente</string>
+    <string name="action_sort_desc">Ordenar descendente</string>
+
+    <string name="hint_search_game">Buscar por nome do jogo…</string>
+
+    <plurals name="items_added">
+        <item quantity="one">%1$d item adicionado na sua lista</item>
+        <item quantity="other">%1$d itens adicionados na sua lista</item>
+    </plurals>
+
+    <string name="action_select_items">Selecionar itens</string>
+    <string name="menu_sort_by">Ordenar por</string>
+    <string name="sort_title">Nome</string>
+    <string name="sort_platform">Plataforma</string>
+    <string name="sort_status">Status</string>
+
+    <string name="menu_filter_by">Filtrar por</string>
+    <string name="filter_all">Todos</string>
+
+    <string name="title_selected">%1$d selecionado(s)</string>
+    <string name="action_close_selection">Fechar seleção</string>
+    <string name="action_select_all">Selecionar todos</string>
+    <string name="action_delete_selected">Excluir selecionados</string>
 </resources>

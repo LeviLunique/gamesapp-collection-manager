@@ -2,13 +2,14 @@ package br.pucpr.appdev.gamesapp.model
 
 import android.content.Context
 import androidx.room.*
+import br.pucpr.appdev.gamesapp.base.Constants
 
-@Entity(tableName = "games")
+@Entity(tableName = Constants.Db.TABLE_GAMES)
 data class GameEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val title: String,
     val platform: String,
-    val status: String,
+    val status: GameStatus,
     val rating: Int,
     val notes: String = ""
 )
@@ -18,6 +19,9 @@ interface GameDao {
     @Query("SELECT * FROM games ORDER BY id DESC")
     suspend fun getAll(): List<GameEntity>
 
+    @Query("SELECT * FROM games WHERE id = :id LIMIT 1")
+    suspend fun getById(id: Long): GameEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(game: GameEntity)
 
@@ -25,7 +29,8 @@ interface GameDao {
     suspend fun delete(game: GameEntity)
 }
 
-@Database(entities = [GameEntity::class], version = 1)
+@Database(entities = [GameEntity::class], version = Constants.Db.VERSION)
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun gameDao(): GameDao
 
@@ -37,7 +42,7 @@ abstract class AppDatabase : RoomDatabase() {
                 Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "games_db"
+                    Constants.Db.NAME
                 ).build().also { INSTANCE = it}
             }
         }

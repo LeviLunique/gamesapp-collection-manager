@@ -6,14 +6,22 @@ import androidx.lifecycle.viewModelScope
 import br.pucpr.appdev.gamesapp.model.AppDatabase
 import br.pucpr.appdev.gamesapp.model.GameEntity
 import br.pucpr.appdev.gamesapp.model.GameRepository
+import br.pucpr.appdev.gamesapp.model.GameStatus
 import kotlinx.coroutines.launch
 
 class CreateGameViewModel(app: Application) : AndroidViewModel(app) {
     private val repo = GameRepository(AppDatabase.getDatabase(app).gameDao())
 
-    fun saveGame(title: String, platform: String, rating: Int) {
+    fun saveGame(title: String, platform: String, rating: Int, status: GameStatus) {
         viewModelScope.launch {
-            repo.insert(GameEntity(title = title, platform = platform, rating = rating, status = "PLAYING"))
+            repo.insert(
+                GameEntity(
+                    title = title,
+                    platform = platform,
+                    rating = rating,
+                    status = status
+                )
+            )
         }
     }
 }

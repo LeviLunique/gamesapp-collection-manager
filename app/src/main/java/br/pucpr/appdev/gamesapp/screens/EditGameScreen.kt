@@ -3,46 +3,103 @@ package br.pucpr.appdev.gamesapp.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
+import br.pucpr.appdev.gamesapp.base.Constants
+import br.pucpr.appdev.gamesapp.model.GameStatus
+import br.pucpr.appdev.gamesapp.R
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditGameScreen(
     padding: PaddingValues,
     onDone: () -> Unit,
+    gameId: Long?,
     vm: EditGameViewModel = viewModel()
 ) {
-    val context = LocalContext.current
-    val navBackStackEntry by vm.navControllerState.collectAsState(initial = null)
     var title by rememberSaveable { mutableStateOf("") }
     var platform by rememberSaveable { mutableStateOf("") }
     var rating by rememberSaveable { mutableStateOf(0) }
+    var status by rememberSaveable { mutableStateOf(GameStatus.PLAYING) }
 
-    LaunchedEffect(Unit) {
-        // TODO: se quiser buscar por ID, adicione método repo.get(id) e preencha os campos.
+    LaunchedEffect(gameId) {
+        if (gameId != null && gameId > 0) {
+            vm.getGameById(gameId)?.let { g ->
+                title = g.title
+                platform = g.platform
+                rating = g.rating
+                status = g.status
+            }
+        }
     }
 
     Column(
-        Modifier
+        modifier = Modifier
             .padding(padding)
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+            .padding(Constants.Ui.SCREEN_PADDING)
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(Constants.Ui.SECTION_SPACING)
     ) {
-        OutlinedTextField(value = title, onValueChange = { title = it }, label = { Text("Título") })
-        OutlinedTextField(value = platform, onValueChange = { platform = it }, label = { Text("Plataforma") })
-        Slider(value = rating.toFloat(), onValueChange = { rating = it.toInt() }, valueRange = 0f..5f, steps = 4)
-        Text("Nota: $rating")
+        OutlinedTextField(
+            value = title,
+            onValueChange = { title = it },
+            label = { Text(stringResource(R.string.label_title)) },
+            modifier = Modifier.fillMaxWidth()
+        )
+        OutlinedTextField(
+            value = platform,
+            onValueChange = { platform = it },
+            label = { Text(stringResource(R.string.label_platform)) },
+            modifier = Modifier.fillMaxWidth()
+        )
 
-        Button(onClick = {
-            vm.saveGame(title, platform, rating)
-            onDone()
-        }) { Text("Salvar alterações") }
+        val statusLabel: @Composable (GameStatus) -> String = {
+            when (it) {
+                GameStatus.BACKLOG -> stringResource(R.string.status_backlog)
+                GameStatus.PLAYING -> stringResource(R.string.status_playing)
+                GameStatus.DONE    -> stringResource(R.string.status_done)
+            }
+        }
 
-        OutlinedButton(onClick = onDone) { Text("Cancelar") }
+        var expanded by remember { mutableStateOf(false) }
+        ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = !expanded }) {
+            OutlinedTextField(
+                modifier = Modifier.menuAnchor().fillMaxWidth(),
+                readOnly = true,
+                value = statusLabel(status),
+                onValueChange = {},
+                label = { Text(stringResource(R.string.label_status)) },
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) }
+            )
+            ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                GameStatus.entries.forEach { opt ->
+                    DropdownMenuItem(
+                        text = { Text(statusLabel(opt)) },
+                        onClick = { status = opt; expanded = false }
+                    )
+                }
+            }
+        }
+
+        Text(stringResource(R.string.label_rating, rating))
+        Slider(
+            value = rating.toFloat(),
+            onValueChange = { rating = it.toInt() },
+            valueRange = Constants.Ui.RATING_MIN.toFloat()..Constants.Ui.RATING_MAX.toFloat(),
+            steps = Constants.Ui.RATING_STEPS
+        )
+
+        Spacer(Modifier.height(20.dp))
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+            OutlinedButton(onClick = onDone) { Text(stringResource(R.string.action_cancel)) }
+            Spacer(Modifier.width(12.dp))
+            Button(onClick = {
+                vm.updateGame(gameId, title, platform, rating, status)
+                onDone()
+            }) { Text(stringResource(R.string.action_save_changes)) }
+        }
     }
 }

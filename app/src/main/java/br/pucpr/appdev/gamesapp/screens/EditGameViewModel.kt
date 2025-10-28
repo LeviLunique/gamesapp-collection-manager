@@ -3,25 +3,30 @@ package br.pucpr.appdev.gamesapp.screens
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import br.pucpr.appdev.gamesapp.model.AppDatabase
-import br.pucpr.appdev.gamesapp.model.GameEntity
-import br.pucpr.appdev.gamesapp.model.GameRepository
-import kotlinx.coroutines.flow.MutableStateFlow
+import br.pucpr.appdev.gamesapp.model.*
 import kotlinx.coroutines.launch
 
 class EditGameViewModel(app: Application) : AndroidViewModel(app) {
     private val repo = GameRepository(AppDatabase.getDatabase(app).gameDao())
 
-    val navControllerState = MutableStateFlow<Any?>(null)
+    suspend fun getGameById(id: Long) = repo.get(id)
 
-    fun saveGame(title: String, platform: String, rating: Int) {
+    fun updateGame(
+        id: Long?,
+        title: String,
+        platform: String,
+        rating: Int,
+        status: GameStatus
+    ) {
+        if (id == null) return
         viewModelScope.launch {
             repo.insert(
                 GameEntity(
+                    id = id,
                     title = title,
                     platform = platform,
                     rating = rating,
-                    status = "PLAYING"
+                    status = status
                 )
             )
         }
