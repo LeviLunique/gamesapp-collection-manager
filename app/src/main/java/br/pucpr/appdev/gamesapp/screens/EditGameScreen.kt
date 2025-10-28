@@ -1,13 +1,19 @@
 package br.pucpr.appdev.gamesapp.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.focus.FocusDirection
 import br.pucpr.appdev.gamesapp.base.Constants
 import br.pucpr.appdev.gamesapp.model.GameStatus
 import br.pucpr.appdev.gamesapp.R
@@ -20,6 +26,8 @@ fun EditGameScreen(
     gameId: Long?,
     vm: EditGameViewModel = viewModel()
 ) {
+    val focusManager = LocalFocusManager.current
+
     var title by rememberSaveable { mutableStateOf("") }
     var platform by rememberSaveable { mutableStateOf("") }
     var rating by rememberSaveable { mutableStateOf(0) }
@@ -47,13 +55,30 @@ fun EditGameScreen(
             value = title,
             onValueChange = { title = it },
             label = { Text(stringResource(R.string.label_title)) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.Words,
+                autoCorrectEnabled = true,
+                imeAction = ImeAction.Next
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = { focusManager.moveFocus(FocusDirection.Down) }
+            )
         )
+
         OutlinedTextField(
             value = platform,
             onValueChange = { platform = it },
             label = { Text(stringResource(R.string.label_platform)) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.Words,
+                autoCorrectEnabled = true,
+                imeAction = ImeAction.Next
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = { focusManager.moveFocus(FocusDirection.Down) }
+            )
         )
 
         val statusLabel: @Composable (GameStatus) -> String = {
@@ -67,7 +92,9 @@ fun EditGameScreen(
         var expanded by remember { mutableStateOf(false) }
         ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = !expanded }) {
             OutlinedTextField(
-                modifier = Modifier.menuAnchor().fillMaxWidth(),
+                modifier = Modifier
+                    .menuAnchor(MenuAnchorType.PrimaryNotEditable, enabled = true)
+                    .fillMaxWidth(),
                 readOnly = true,
                 value = statusLabel(status),
                 onValueChange = {},
