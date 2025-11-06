@@ -3,9 +3,7 @@ package br.pucpr.appdev.gamesapp.screens
 import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
 import br.pucpr.appdev.gamesapp.model.*
-import kotlinx.coroutines.launch
 
 class EditGameViewModel(app: Application) : AndroidViewModel(app) {
     private val repo: IGameRepository = FirestoreGameRepository()
@@ -13,7 +11,7 @@ class EditGameViewModel(app: Application) : AndroidViewModel(app) {
 
     suspend fun getGameById(id: String) = repo.get(id)
 
-    fun updateGame(
+    suspend fun updateGame(
         id: String,
         title: String,
         platform: String,
@@ -22,11 +20,13 @@ class EditGameViewModel(app: Application) : AndroidViewModel(app) {
         newCover: Uri?,
         oldCoverUrl: String
     ) {
-        viewModelScope.launch {
+        try {
             val coverUrl = if (newCover != null) {
                 storage.deleteCoverIfAny(oldCoverUrl)
                 storage.uploadCover(id, newCover)
-            } else oldCoverUrl
+            } else {
+                oldCoverUrl
+            }
 
             repo.upsert(
                 GameItem(
@@ -38,6 +38,8 @@ class EditGameViewModel(app: Application) : AndroidViewModel(app) {
                     coverUrl = coverUrl
                 )
             )
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }

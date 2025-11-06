@@ -42,19 +42,24 @@ class FirestoreGameRepository : IGameRepository {
     }
 
     override suspend fun upsert(item: GameItem): String {
-        val remote = GameRemote(
-            title = item.title,
-            platform = item.platform,
-            status = item.status.name,
-            rating = item.rating,
-            notes = item.notes,
-            coverUrl = item.coverUrl
-        )
-        return if (item.id == null) {
-            col().add(remote).await().id
-        } else {
-            col().document(item.id).set(remote).await()
-            item.id
+        return try {
+            val remote = GameRemote(
+                title = item.title,
+                platform = item.platform,
+                status = item.status.name,
+                rating = item.rating,
+                notes = item.notes,
+                coverUrl = item.coverUrl
+            )
+            if (item.id == null) {
+                col().add(remote).await().id
+            } else {
+                col().document(item.id).set(remote).await()
+                item.id
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw e
         }
     }
 

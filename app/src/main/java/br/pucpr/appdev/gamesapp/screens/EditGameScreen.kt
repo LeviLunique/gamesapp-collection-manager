@@ -10,7 +10,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -21,6 +24,8 @@ import androidx.compose.ui.focus.FocusDirection
 import br.pucpr.appdev.gamesapp.base.Constants
 import br.pucpr.appdev.gamesapp.model.GameStatus
 import br.pucpr.appdev.gamesapp.R
+import coil.compose.AsyncImage
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,7 +42,7 @@ fun EditGameScreen(
     var platform by rememberSaveable { mutableStateOf("") }
     var rating by rememberSaveable { mutableStateOf(0) }
     var status by rememberSaveable { mutableStateOf(GameStatus.PLAYING) }
-    var oldCoverUrl by rememberSaveable { mutableStateOf("") }
+    var oldCoverUrl by remember { mutableStateOf("") }
     var newCoverUri by remember { mutableStateOf<Uri?>(null) }
 
     val picker = rememberLauncherForActivityResult(
@@ -117,15 +122,41 @@ fun EditGameScreen(
             onClick = { picker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) }
         ) { Text(if (newCoverUri != null) "Trocar capa (imagem selecionada)" else "Selecionar nova capa (opcional)") }
 
+        val displayImageSource = newCoverUri ?: oldCoverUrl.takeIf { it.isNotBlank() }
+        displayImageSource?.let { imageSource ->
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    AsyncImage(
+                        model = imageSource,
+                        contentDescription = stringResource(R.string.label_cover_preview),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(MaterialTheme.shapes.medium),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+            }
+        }
+
         Spacer(Modifier.height(20.dp))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
             OutlinedButton(onClick = onDone) { Text(stringResource(R.string.action_cancel)) }
             Spacer(Modifier.width(12.dp))
             Button(onClick = {
-                if (!gameId.isNullOrBlank()) {
-                    vm.updateGame(gameId, title, platform, rating, status, newCoverUri, oldCoverUrl)
+                scope.launch {
+                    if (!gameId.isNullOrBlank()) {
+                        vm.updateGame(gameId, title, platform, rating, status, newCoverUri, oldCoverUrl)
+                    }
+                    onDone()
                 }
-                onDone()
             }) { Text(stringResource(R.string.action_save_changes)) }
         }
     }

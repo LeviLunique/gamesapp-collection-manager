@@ -11,11 +11,18 @@ class StorageRepository {
     private val storage = FirebaseStorage.getInstance()
 
     suspend fun uploadCover(tempDocId: String?, localUri: Uri): String {
-        val uid = requireNotNull(auth.currentUser?.uid) { "Usuário não autenticado" }
-        val docId = tempDocId ?: UUID.randomUUID().toString()
-        val ref = storage.getReference("users/$uid/covers/$docId.jpg")
-        ref.putFile(localUri).await()
-        return ref.downloadUrl.await().toString()
+        return try {
+            val uid = requireNotNull(auth.currentUser?.uid) { "Usuário não autenticado" }
+            val docId = tempDocId ?: UUID.randomUUID().toString()
+            val ref = storage.getReference("users/$uid/covers/$docId.jpg")
+
+            val uploadTask = ref.putFile(localUri).await()
+            val downloadUrl = ref.downloadUrl.await().toString()
+            downloadUrl
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw e
+        }
     }
 
     suspend fun deleteCoverIfAny(coverUrl: String) {
