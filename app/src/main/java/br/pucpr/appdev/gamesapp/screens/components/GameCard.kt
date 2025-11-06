@@ -21,12 +21,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.foundation.layout.size
 import br.pucpr.appdev.gamesapp.R
 import br.pucpr.appdev.gamesapp.base.Constants
-import br.pucpr.appdev.gamesapp.model.GameEntity
+import br.pucpr.appdev.gamesapp.model.GameItem
 import br.pucpr.appdev.gamesapp.model.GameStatus
 
 @Composable
 fun GameCard(
-    game: GameEntity,
+    game: GameItem,
     selectionMode: Boolean,
     selected: Boolean,
     onToggleSelect: () -> Unit,

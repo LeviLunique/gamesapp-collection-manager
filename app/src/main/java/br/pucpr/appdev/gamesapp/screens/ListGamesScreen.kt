@@ -15,7 +15,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.pucpr.appdev.gamesapp.R
 import br.pucpr.appdev.gamesapp.base.Constants
-import br.pucpr.appdev.gamesapp.model.GameEntity
+import br.pucpr.appdev.gamesapp.model.GameItem
 import br.pucpr.appdev.gamesapp.model.GameStatus
 import br.pucpr.appdev.gamesapp.model.SortKey
 import br.pucpr.appdev.gamesapp.screens.components.GameCard
@@ -28,7 +28,7 @@ import br.pucpr.appdev.gamesapp.screens.components.SearchField
 fun ListGamesScreen(
     padding: PaddingValues,
     onAdd: () -> Unit,
-    onEdit: (Long) -> Unit,
+    onEdit: (String) -> Unit,
     vm: ListGamesViewModel = viewModel()
 ) {
     val allGames by vm.games.collectAsState()
@@ -40,7 +40,7 @@ fun ListGamesScreen(
     var sortAsc by remember { mutableStateOf(true) }
     var filterStatus: GameStatus? by remember { mutableStateOf(null) }
     var selectionMode by remember { mutableStateOf(false) }
-    val selectedIds = remember { mutableStateListOf<Long>() }
+    val selectedIds = remember { mutableStateListOf<String>() }
 
     val visibleGames by remember(allGames, search.text, filterStatus, sortKey, sortAsc) {
         mutableStateOf(
@@ -53,7 +53,7 @@ fun ListGamesScreen(
                 .filter { g -> filterStatus?.let { g.status == it } ?: true }
                 .sortedWith(
                     when (sortKey) {
-                        SortKey.TITLE    -> compareBy<GameEntity> { it.title.lowercase() }
+                        SortKey.TITLE    -> compareBy<GameItem> { it.title.lowercase() }
                         SortKey.PLATFORM -> compareBy { it.platform.lowercase() }
                         SortKey.STATUS   -> compareBy { it.status.name }
                     }
@@ -62,8 +62,13 @@ fun ListGamesScreen(
         )
     }
 
-    fun toggleSelect(id: Long) { if (id in selectedIds) selectedIds.remove(id) else selectedIds.add(id) }
-    fun selectAllCurrent() { selectedIds.clear(); selectedIds.addAll(visibleGames.map { it.id }) }
+    fun toggleSelect(id: String) {
+        if (id in selectedIds) selectedIds.remove(id) else selectedIds.add(id)
+    }
+    fun selectAllCurrent() {
+        selectedIds.clear()
+        selectedIds.addAll(visibleGames.mapNotNull { it.id })
+    }
     fun clearSelection() { selectedIds.clear(); selectionMode = false }
     fun deleteSelected() {
         visibleGames.filter { it.id in selectedIds }.forEach { vm.delete(it) }
@@ -164,14 +169,15 @@ fun ListGamesScreen(
                     bottom = Constants.Ui.FAB_LIST_SPACING
                 )
             ) {
-                items(visibleGames, key = { it.id }) { game ->
-                    val selected = selectionMode && (game.id in selectedIds)
+                items(visibleGames, key = { it.id ?: it.title }) { game ->
+                    val gid = game.id ?: return@items
+                    val selected = selectionMode && (gid in selectedIds)
                     GameCard(
                         game = game,
                         selectionMode = selectionMode,
                         selected = selected,
-                        onToggleSelect = { toggleSelect(game.id) },
-                        onEdit = { if (selectionMode) toggleSelect(game.id) else onEdit(game.id) },
+                        onToggleSelect = { toggleSelect(gid) },
+                        onEdit = { if (selectionMode) toggleSelect(gid) else onEdit(gid) },
                         onDelete = { vm.delete(game) }
                     )
                 }

@@ -5,12 +5,6 @@ import androidx.compose.ui.unit.dp
 import br.pucpr.appdev.gamesapp.model.GameStatus
 
 class Constants {
-    object Db {
-        const val NAME = "games_db"
-        const val VERSION = 1
-        const val TABLE_GAMES = "games"
-    }
-
     object Nav {
         const val ARG_ID = "id"
     }

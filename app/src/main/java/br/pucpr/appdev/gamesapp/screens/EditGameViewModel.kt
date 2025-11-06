@@ -1,32 +1,41 @@
 package br.pucpr.appdev.gamesapp.screens
 
 import android.app.Application
+import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import br.pucpr.appdev.gamesapp.model.*
 import kotlinx.coroutines.launch
 
 class EditGameViewModel(app: Application) : AndroidViewModel(app) {
-    private val repo = GameRepository(AppDatabase.getDatabase(app).gameDao())
+    private val repo: IGameRepository = FirestoreGameRepository()
+    private val storage = StorageRepository()
 
-    suspend fun getGameById(id: Long) = repo.get(id)
+    suspend fun getGameById(id: String) = repo.get(id)
 
     fun updateGame(
-        id: Long?,
+        id: String,
         title: String,
         platform: String,
         rating: Int,
-        status: GameStatus
+        status: GameStatus,
+        newCover: Uri?,
+        oldCoverUrl: String
     ) {
-        if (id == null) return
         viewModelScope.launch {
-            repo.insert(
-                GameEntity(
+            val coverUrl = if (newCover != null) {
+                storage.deleteCoverIfAny(oldCoverUrl)
+                storage.uploadCover(id, newCover)
+            } else oldCoverUrl
+
+            repo.upsert(
+                GameItem(
                     id = id,
                     title = title,
                     platform = platform,
                     rating = rating,
-                    status = status
+                    status = status,
+                    coverUrl = coverUrl
                 )
             )
         }
