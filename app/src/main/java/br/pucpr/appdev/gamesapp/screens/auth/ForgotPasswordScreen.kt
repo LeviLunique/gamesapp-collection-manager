@@ -12,11 +12,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.pucpr.appdev.gamesapp.R
 import br.pucpr.appdev.gamesapp.base.Constants
@@ -28,6 +28,7 @@ fun ForgotPasswordScreen(
     onBack: () -> Unit,
     vm: ForgotPasswordViewModel = viewModel()
 ) {
+    val context = LocalContext.current
     var email by remember { mutableStateOf("") }
     var error by remember { mutableStateOf<String?>(null) }
     var success by remember { mutableStateOf(false) }
@@ -122,7 +123,7 @@ fun ForgotPasswordScreen(
                     ) {
                         Text(
                             text = error!!,
-                            modifier = Modifier.padding(12.dp),
+                            modifier = Modifier.padding(Constants.Auth.CARD_PADDING),
                             color = MaterialTheme.colorScheme.onErrorContainer,
                             style = MaterialTheme.typography.bodySmall
                         )
@@ -134,11 +135,11 @@ fun ForgotPasswordScreen(
                 Button(
                     onClick = {
                         if (email.isBlank()) {
-                            error = "Digite seu email"
+                            error = context.getString(R.string.error_email_required)
                             return@Button
                         }
                         if (!isEmailValid) {
-                            error = "Email inválido"
+                            error = context.getString(R.string.error_invalid_email)
                             return@Button
                         }
 
@@ -174,7 +175,7 @@ fun ForgotPasswordScreen(
                 }
 
             } else {
-                Spacer(Modifier.height(32.dp))
+                Spacer(Modifier.height(Constants.Auth.SUCCESS_SCREEN_TOP_SPACING))
 
                 Icon(
                     imageVector = Icons.Default.Email,
@@ -231,7 +232,7 @@ fun ForgotPasswordScreen(
                     )
                 ) {
                     Column(
-                        modifier = Modifier.padding(12.dp),
+                        modifier = Modifier.padding(Constants.Auth.CARD_PADDING),
                         verticalArrangement = Arrangement.spacedBy(Constants.Auth.AUTH_REQUIREMENT_SPACING)
                     ) {
                         Text(
@@ -278,8 +279,6 @@ fun ForgotPasswordScreen(
                     Text(stringResource(R.string.action_send_to_another_email))
                 }
             }
-
-            Spacer(Modifier.height(32.dp))
         }
     }
 }

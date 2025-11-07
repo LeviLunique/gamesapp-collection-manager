@@ -134,7 +134,7 @@
     <string name="error_invalid_email">Email inválido</string>
     <string name="error_email_required">Digite seu email</string>
     <string name="error_password_required">Digite sua senha</string>
-    <string name="error_password_too_short">Mínimo 6 caracteres</string>
+    <string name="error_password_too_short">A senha deve ter pelo menos 6 caracteres</string>
     <string name="error_passwords_dont_match">As senhas não coincidem</string>
     <string name="error_password_same_as_current">A nova senha deve ser diferente da senha atual</string>
     <string name="error_new_password_required">Digite a nova senha</string>
@@ -142,6 +142,12 @@
     <string name="error_current_password_required">Digite sua senha atual</string>
     <string name="error_new_email_required">Digite o novo email</string>
     <string name="error_fill_all_fields">Preencha todos os campos</string>
+    <string name="error_invalid_credentials">Credenciais inválidas</string>
+    <string name="error_unknown">Erro desconhecido</string>
+    <string name="error_enter_password">Digite uma senha</string>
+    <string name="error_confirm_password">Confirme sua senha</string>
+    <string name="error_login_failed">Erro ao fazer login: %1$s</string>
+    <string name="error_register_failed">Erro ao criar conta: %1$s</string>
 
     <!-- Success Messages -->
     <string name="success_password_changed">Senha alterada com sucesso!</string>
@@ -156,7 +162,6 @@
     <string name="error_too_many_requests">Muitas tentativas. Tente novamente mais tarde</string>
     <string name="error_weak_password">Senha muito fraca. Use uma senha mais forte</string>
     <string name="error_network">Erro de conexão. Verifique sua internet</string>
-    <string name="error_unknown">Erro desconhecido</string>
     <string name="error_send_email">Erro ao enviar email: %1$s</string>
     <string name="error_generic">Erro: %1$s</string>
     <string name="error_user_not_authenticated">Usuário não autenticado</string>

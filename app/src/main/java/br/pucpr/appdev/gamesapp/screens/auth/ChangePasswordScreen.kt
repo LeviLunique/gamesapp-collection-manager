@@ -58,6 +58,14 @@ fun ChangePasswordScreen(
 
     val isPasswordValid = hasMinLength && passwordsMatch && passwordsDifferent
 
+    val errorCurrentPasswordRequired = stringResource(R.string.error_current_password_required)
+    val errorNewPasswordRequired = stringResource(R.string.error_new_password_required)
+    val errorConfirmPasswordRequired = stringResource(R.string.error_confirm_password_required)
+    val errorPasswordsDontMatch = stringResource(R.string.error_passwords_dont_match)
+    val errorPasswordSameAsCurrent = stringResource(R.string.error_password_same_as_current)
+    val errorPasswordTooShort = stringResource(R.string.error_password_too_short)
+    val errorUnknown = stringResource(R.string.error_unknown)
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -224,27 +232,27 @@ fun ChangePasswordScreen(
             Button(
                 onClick = {
                     if (currentPassword.isBlank()) {
-                        message = "Digite sua senha atual"
+                        message = errorCurrentPasswordRequired
                         return@Button
                     }
                     if (newPassword.isBlank()) {
-                        message = "Digite a nova senha"
+                        message = errorNewPasswordRequired
                         return@Button
                     }
                     if (confirmPassword.isBlank()) {
-                        message = "Confirme a nova senha"
+                        message = errorConfirmPasswordRequired
                         return@Button
                     }
                     if (!passwordsMatch) {
-                        message = "As senhas não coincidem"
+                        message = errorPasswordsDontMatch
                         return@Button
                     }
                     if (!passwordsDifferent) {
-                        message = "A nova senha deve ser diferente da senha atual"
+                        message = errorPasswordSameAsCurrent
                         return@Button
                     }
                     if (!hasMinLength) {
-                        message = "A senha deve ter pelo menos 6 caracteres"
+                        message = errorPasswordTooShort
                         return@Button
                     }
 
@@ -257,7 +265,7 @@ fun ChangePasswordScreen(
                             newPassword = ""
                             confirmPassword = ""
                         }.onFailure { exception ->
-                            message = exception.message ?: "Erro desconhecido"
+                            message = exception.message ?: errorUnknown
                         }
                         isLoading = false
                     }

@@ -53,6 +53,16 @@ fun RegisterScreen(
 
     val isFormValid = isEmailValid && hasMinLength && passwordsMatch
 
+    val errorEmailRequired = stringResource(R.string.error_email_required)
+    val errorInvalidEmail = stringResource(R.string.error_invalid_email)
+    val errorEnterPassword = stringResource(R.string.error_enter_password)
+    val errorPasswordTooShort = stringResource(R.string.error_password_too_short)
+    val errorConfirmPassword = stringResource(R.string.error_confirm_password)
+    val errorPasswordsDontMatch = stringResource(R.string.error_passwords_dont_match)
+    val errorEmailAlreadyInUse = stringResource(R.string.error_email_already_in_use)
+    val errorWeakPassword = stringResource(R.string.error_weak_password)
+    val errorNetwork = stringResource(R.string.error_network)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -212,27 +222,27 @@ fun RegisterScreen(
         Button(
             onClick = {
                 if (email.isBlank()) {
-                    error = "Digite seu email"
+                    error = errorEmailRequired
                     return@Button
                 }
                 if (!isEmailValid) {
-                    error = "Email inválido"
+                    error = errorInvalidEmail
                     return@Button
                 }
                 if (password.isBlank()) {
-                    error = "Digite uma senha"
+                    error = errorEnterPassword
                     return@Button
                 }
                 if (!hasMinLength) {
-                    error = "A senha deve ter pelo menos 6 caracteres"
+                    error = errorPasswordTooShort
                     return@Button
                 }
                 if (confirmPassword.isBlank()) {
-                    error = "Confirme sua senha"
+                    error = errorConfirmPassword
                     return@Button
                 }
                 if (!passwordsMatch) {
-                    error = "As senhas não coincidem"
+                    error = errorPasswordsDontMatch
                     return@Button
                 }
 
@@ -245,13 +255,13 @@ fun RegisterScreen(
                     } catch (t: Throwable) {
                         error = when {
                             t.message?.contains("email-already-in-use") == true ->
-                                "Este email já está em uso"
+                                errorEmailAlreadyInUse
                             t.message?.contains("invalid-email") == true ->
-                                "Email inválido"
+                                errorInvalidEmail
                             t.message?.contains("weak-password") == true ->
-                                "Senha muito fraca. Use uma senha mais forte"
+                                errorWeakPassword
                             t.message?.contains("network") == true ->
-                                "Erro de conexão. Verifique sua internet"
+                                errorNetwork
                             else -> "Erro ao criar conta: ${t.message}"
                         }
                     } finally {

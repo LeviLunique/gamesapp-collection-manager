@@ -44,6 +44,15 @@ fun LoginScreen(
     val isPasswordValid = password.length >= Constants.Auth.PASSWORD_MIN_LENGTH
     val isFormValid = isEmailValid && isPasswordValid
 
+    val errorEmailRequired = stringResource(R.string.error_email_required)
+    val errorInvalidEmail = stringResource(R.string.error_invalid_email)
+    val errorPasswordRequired = stringResource(R.string.error_password_required)
+    val errorPasswordTooShort = stringResource(R.string.error_password_too_short)
+    val errorEmailOrPasswordIncorrect = stringResource(R.string.error_email_or_password_incorrect)
+    val errorUserDisabled = stringResource(R.string.error_user_disabled)
+    val errorTooManyRequests = stringResource(R.string.error_too_many_requests)
+    val errorNetwork = stringResource(R.string.error_network)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -157,19 +166,19 @@ fun LoginScreen(
         Button(
             onClick = {
                 if (email.isBlank()) {
-                    error = "Digite seu email"
+                    error = errorEmailRequired
                     return@Button
                 }
                 if (!isEmailValid) {
-                    error = "Email inválido"
+                    error = errorInvalidEmail
                     return@Button
                 }
                 if (password.isBlank()) {
-                    error = "Digite sua senha"
+                    error = errorPasswordRequired
                     return@Button
                 }
                 if (!isPasswordValid) {
-                    error = "A senha deve ter pelo menos 6 caracteres"
+                    error = errorPasswordTooShort
                     return@Button
                 }
 
@@ -184,15 +193,15 @@ fun LoginScreen(
                             t.message?.contains("INVALID_LOGIN_CREDENTIALS") == true ||
                             t.message?.contains("user-not-found") == true ||
                             t.message?.contains("wrong-password") == true ->
-                                "Email ou senha incorretos"
+                                errorEmailOrPasswordIncorrect
                             t.message?.contains("invalid-email") == true ->
-                                "Email inválido"
+                                errorInvalidEmail
                             t.message?.contains("user-disabled") == true ->
-                                "Esta conta foi desativada"
+                                errorUserDisabled
                             t.message?.contains("too-many-requests") == true ->
-                                "Muitas tentativas. Tente novamente mais tarde"
+                                errorTooManyRequests
                             t.message?.contains("network") == true ->
-                                "Erro de conexão. Verifique sua internet"
+                                errorNetwork
                             else -> "Erro ao fazer login: ${t.message}"
                         }
                     } finally {

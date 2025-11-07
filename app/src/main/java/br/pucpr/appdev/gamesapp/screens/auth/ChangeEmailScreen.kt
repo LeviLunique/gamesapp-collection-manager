@@ -45,6 +45,12 @@ fun ChangeEmailScreen(
     val isEmailValid = newEmail.contains("@") && newEmail.contains(".")
     val isFormValid = isEmailValid && currentPassword.length >= Constants.Auth.PASSWORD_MIN_LENGTH
 
+    // String resources for validation messages
+    val errorNewEmailRequired = stringResource(R.string.error_new_email_required)
+    val errorInvalidEmail = stringResource(R.string.error_invalid_email)
+    val errorCurrentPasswordRequired = stringResource(R.string.error_current_password_required)
+    val errorUnknown = stringResource(R.string.error_unknown)
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -144,15 +150,15 @@ fun ChangeEmailScreen(
             Button(
                 onClick = {
                     if (newEmail.isBlank()) {
-                        message = "Digite o novo email"
+                        message = errorNewEmailRequired
                         return@Button
                     }
                     if (!isEmailValid) {
-                        message = "Email inválido"
+                        message = errorInvalidEmail
                         return@Button
                     }
                     if (currentPassword.isBlank()) {
-                        message = "Digite sua senha atual"
+                        message = errorCurrentPasswordRequired
                         return@Button
                     }
 
@@ -164,7 +170,7 @@ fun ChangeEmailScreen(
                             newEmail = ""
                             currentPassword = ""
                         }.onFailure { exception ->
-                            message = exception.message ?: "Erro desconhecido"
+                            message = exception.message ?: errorUnknown
                         }
                         isLoading = false
                     }
