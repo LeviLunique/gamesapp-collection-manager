@@ -25,6 +25,8 @@ Aplicativo Android desenvolvido em Kotlin com Jetpack Compose para gerenciamento
 
 O **GamesApp** é um aplicativo móvel que permite aos usuários gerenciar sua coleção pessoal de jogos de forma simples e intuitiva. Com integração completa com Firebase, oferece autenticação segura, armazenamento em nuvem e sincronização automática entre dispositivos.
 
+🎥 **Apresentação em vídeo:** [Assista no YouTube](https://youtu.be/s_c4h01kfqs)
+
 ### 🎓 Contexto Acadêmico
 
 Projeto desenvolvido como Trabalho Final da disciplina de **Webservices e MBaaS** da **PUCPR**, demonstrando o uso prático de:
