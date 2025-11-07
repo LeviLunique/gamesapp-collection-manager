@@ -176,4 +176,11 @@
     <string name="action_change_cover">Trocar capa (imagem selecionada)</string>
     <string name="action_select_new_cover">Selecionar nova capa (opcional)</string>
 
+    <!-- Confirmation Dialogs -->
+    <string name="dialog_confirm_email_change_title">Confirmar alteração de email</string>
+    <string name="dialog_confirm_email_change_message">Tem certeza que deseja alterar seu email de\n\n%1$s\n\npara\n\n%2$s?\n\nVocê receberá um email de verificação no novo endereço.</string>
+    <string name="dialog_confirm_password_change_title">Confirmar alteração de senha</string>
+    <string name="dialog_confirm_password_change_message">Tem certeza que deseja alterar sua senha?\n\nVocê permanecerá conectado após a alteração.</string>
+    <string name="action_confirm">Confirmar</string>
+
 </resources>

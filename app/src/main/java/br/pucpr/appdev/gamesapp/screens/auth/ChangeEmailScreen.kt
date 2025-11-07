@@ -22,6 +22,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.pucpr.appdev.gamesapp.R
 import br.pucpr.appdev.gamesapp.base.Constants
+import br.pucpr.appdev.gamesapp.screens.components.ConfirmationDialog
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,11 +42,11 @@ fun ChangeEmailScreen(
     var passwordVisible by remember { mutableStateOf(false) }
     var message by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
+    var showConfirmDialog by remember { mutableStateOf(false) }
 
     val isEmailValid = newEmail.contains("@") && newEmail.contains(".")
     val isFormValid = isEmailValid && currentPassword.length >= Constants.Auth.PASSWORD_MIN_LENGTH
 
-    // String resources for validation messages
     val errorNewEmailRequired = stringResource(R.string.error_new_email_required)
     val errorInvalidEmail = stringResource(R.string.error_invalid_email)
     val errorCurrentPasswordRequired = stringResource(R.string.error_current_password_required)
@@ -162,18 +163,7 @@ fun ChangeEmailScreen(
                         return@Button
                     }
 
-                    isLoading = true
-                    scope.launch {
-                        val result = vm.changeEmail(newEmail, currentPassword)
-                        result.onSuccess { successMessage ->
-                            message = successMessage
-                            newEmail = ""
-                            currentPassword = ""
-                        }.onFailure { exception ->
-                            message = exception.message ?: errorUnknown
-                        }
-                        isLoading = false
-                    }
+                    showConfirmDialog = true
                 },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !isLoading && isFormValid
@@ -198,5 +188,27 @@ fun ChangeEmailScreen(
             }
         }
     }
+
+    ConfirmationDialog(
+        showDialog = showConfirmDialog,
+        title = stringResource(R.string.dialog_confirm_email_change_title),
+        message = stringResource(R.string.dialog_confirm_email_change_message, currentEmail, newEmail),
+        onConfirm = {
+            showConfirmDialog = false
+            isLoading = true
+            scope.launch {
+                val result = vm.changeEmail(newEmail, currentPassword)
+                result.onSuccess { successMessage ->
+                    message = successMessage
+                    newEmail = ""
+                    currentPassword = ""
+                }.onFailure { exception ->
+                    message = exception.message ?: errorUnknown
+                }
+                isLoading = false
+            }
+        },
+        onDismiss = { showConfirmDialog = false }
+    )
 }
 

@@ -22,10 +22,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.pucpr.appdev.gamesapp.R
 import br.pucpr.appdev.gamesapp.base.Constants
+import br.pucpr.appdev.gamesapp.screens.components.ConfirmationDialog
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,6 +47,7 @@ fun ChangePasswordScreen(
     var confirmPasswordVisible by remember { mutableStateOf(false) }
     var message by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
+    var showConfirmDialog by remember { mutableStateOf(false) }
 
     val passwordsMatch = newPassword == confirmPassword && newPassword.isNotEmpty()
     val passwordsDifferent = newPassword != currentPassword && newPassword.isNotEmpty()
@@ -256,19 +257,7 @@ fun ChangePasswordScreen(
                         return@Button
                     }
 
-                    isLoading = true
-                    scope.launch {
-                        val result = vm.changePassword(currentPassword, newPassword)
-                        result.onSuccess { successMessage ->
-                            message = successMessage
-                            currentPassword = ""
-                            newPassword = ""
-                            confirmPassword = ""
-                        }.onFailure { exception ->
-                            message = exception.message ?: errorUnknown
-                        }
-                        isLoading = false
-                    }
+                    showConfirmDialog = true
                 },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !isLoading && isPasswordValid && currentPassword.isNotEmpty()
@@ -293,6 +282,28 @@ fun ChangePasswordScreen(
             }
         }
     }
+    ConfirmationDialog(
+        showDialog = showConfirmDialog,
+        title = stringResource(R.string.dialog_confirm_password_change_title),
+        message = stringResource(R.string.dialog_confirm_password_change_message),
+        onConfirm = {
+            showConfirmDialog = false
+            isLoading = true
+            scope.launch {
+                val result = vm.changePassword(currentPassword, newPassword)
+                result.onSuccess { successMessage ->
+                    message = successMessage
+                    currentPassword = ""
+                    newPassword = ""
+                    confirmPassword = ""
+                }.onFailure { exception ->
+                    message = exception.message ?: errorUnknown
+                }
+                isLoading = false
+            }
+        },
+        onDismiss = { showConfirmDialog = false }
+    )
 }
 
 @Composable
@@ -303,7 +314,7 @@ private fun PasswordRequirement(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(vertical = 2.dp)
+        modifier = Modifier.padding(vertical = Constants.Auth.AUTH_REQUIREMENT_SPACING)
     ) {
         Icon(
             imageVector = if (satisfied) Icons.Default.Check else Icons.Default.Close,
@@ -317,7 +328,7 @@ private fun PasswordRequirement(
             },
             modifier = Modifier.size(Constants.Auth.PASSWORD_REQUIREMENT_ICON_SIZE)
         )
-        Spacer(Modifier.width(4.dp))
+        Spacer(Modifier.width(Constants.Auth.AUTH_REQUIREMENT_SPACING))
         Text(
             text = text,
             style = MaterialTheme.typography.bodySmall,
