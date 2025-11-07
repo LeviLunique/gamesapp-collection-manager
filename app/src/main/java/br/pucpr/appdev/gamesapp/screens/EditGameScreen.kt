@@ -46,6 +46,7 @@ fun EditGameScreen(
     var oldCoverUrl by remember { mutableStateOf("") }
     var newCoverUri by remember { mutableStateOf<Uri?>(null) }
     var shouldRemoveCover by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(false) }
 
     val picker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
@@ -184,16 +185,35 @@ fun EditGameScreen(
 
         Spacer(Modifier.height(Constants.Ui.SECTION_SPACING))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-            OutlinedButton(onClick = onDone) { Text(stringResource(R.string.action_cancel)) }
+            OutlinedButton(
+                onClick = onDone,
+                enabled = !isLoading
+            ) {
+                Text(stringResource(R.string.action_cancel))
+            }
             Spacer(Modifier.width(Constants.Ui.BUTTON_SPACING))
-            Button(onClick = {
-                scope.launch {
-                    if (!gameId.isNullOrBlank()) {
-                        vm.updateGame(gameId, title, platform, rating, status, newCoverUri, oldCoverUrl, shouldRemoveCover)
+            Button(
+                onClick = {
+                    isLoading = true
+                    scope.launch {
+                        if (!gameId.isNullOrBlank()) {
+                            vm.updateGame(gameId, title, platform, rating, status, newCoverUri, oldCoverUrl, shouldRemoveCover)
+                        }
+                        isLoading = false
+                        onDone()
                     }
-                    onDone()
+                },
+                enabled = !isLoading
+            ) {
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(Constants.Auth.LOADING_INDICATOR_SIZE),
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                    Spacer(Modifier.width(Constants.Auth.LOADING_SPACING))
                 }
-            }) { Text(stringResource(R.string.action_save_changes)) }
+                Text(stringResource(R.string.action_save_changes))
+            }
         }
     }
 }

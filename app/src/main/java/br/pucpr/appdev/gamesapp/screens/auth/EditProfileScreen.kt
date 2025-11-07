@@ -252,10 +252,13 @@ fun EditProfileScreen(
                     } catch (e: Exception) {
                     }
 
-                    firestore.collection(Constants.Firebase.COLLECTION_USERS)
-                        .document(uid)
-                        .delete()
-                        .await()
+                    try {
+                        firestore.collection(Constants.Firebase.COLLECTION_USERS)
+                            .document(uid)
+                            .delete()
+                            .await()
+                    } catch (e: Exception) {
+                    }
 
                     currentUser.delete().await()
 

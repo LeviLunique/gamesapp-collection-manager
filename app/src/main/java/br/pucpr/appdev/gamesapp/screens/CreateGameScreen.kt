@@ -17,7 +17,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.focus.FocusDirection
 import br.pucpr.appdev.gamesapp.R
@@ -42,6 +41,7 @@ fun CreateGameScreen(
     var status by remember { mutableStateOf(Constants.Defaults.STATUS) }
     var expanded by remember { mutableStateOf(false) }
     var coverUri by remember { mutableStateOf<Uri?>(null) }
+    var isLoading by remember { mutableStateOf(false) }
 
     val picker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
@@ -139,14 +139,33 @@ fun CreateGameScreen(
         }
 
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-            OutlinedButton(onClick = onDone) { Text(stringResource(R.string.action_cancel)) }
+            OutlinedButton(
+                onClick = onDone,
+                enabled = !isLoading
+            ) {
+                Text(stringResource(R.string.action_cancel))
+            }
             Spacer(Modifier.width(Constants.Ui.BUTTON_SPACING))
-            Button(onClick = {
-                scope.launch {
-                    vm.saveGame(title, platform, rating, status, coverUri)
-                    onDone()
+            Button(
+                onClick = {
+                    isLoading = true
+                    scope.launch {
+                        vm.saveGame(title, platform, rating, status, coverUri)
+                        isLoading = false
+                        onDone()
+                    }
+                },
+                enabled = !isLoading
+            ) {
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(Constants.Auth.LOADING_INDICATOR_SIZE),
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                    Spacer(Modifier.width(Constants.Auth.LOADING_SPACING))
                 }
-            }) { Text(stringResource(R.string.action_save)) }
+                Text(stringResource(R.string.action_save))
+            }
         }
     }
 }

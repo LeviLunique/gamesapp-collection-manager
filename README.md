@@ -294,8 +294,14 @@ Veja a seção [Configuração do Firebase](#configuração-do-firebase) abaixo.
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /users/{userId}/games/{gameId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+    // Permite que o usuário gerencie seu próprio documento
+    match /users/{userId} {
+      allow read, write, delete: if request.auth != null && request.auth.uid == userId;
+      
+      // Permite que o usuário gerencie seus jogos
+      match /games/{gameId} {
+        allow read, write, delete: if request.auth != null && request.auth.uid == userId;
+      }
     }
   }
 }
