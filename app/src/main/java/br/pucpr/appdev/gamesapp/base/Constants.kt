@@ -12,6 +12,7 @@ class Constants {
     object Ui {
         val SCREEN_PADDING = 16.dp
         val SECTION_SPACING = 12.dp
+        val SECTION_SPACING_SMALL = 6.dp
         val FAB_LIST_SPACING = 80.dp
 
         val CARD_CONTENT_PADDING = 16.dp
@@ -33,6 +34,9 @@ class Constants {
 
         val ICON_SIZE_SMALL = 18.dp
 
+        val BUTTON_SPACING = 12.dp
+        val COVER_PREVIEW_HEIGHT = 200.dp
+
         val MENU_SECTION_PAD_H = 16.dp
         val MENU_SECTION_PAD_V = 6.dp
         const val MENU_SECTION_ALPHA = 0.7f
@@ -51,5 +55,32 @@ class Constants {
     object Defaults {
         val STATUS: GameStatus = GameStatus.PLAYING
         const val RATING = 0
+    }
+
+    object Auth {
+        // Password Requirements
+        const val PASSWORD_MIN_LENGTH = 6
+
+        // UI Sizes
+        val ICON_SIZE_LARGE = 64.dp
+        val ICON_SIZE_EXTRA_LARGE = 80.dp
+        val PROFILE_ICON_SIZE = 24.dp
+        val PASSWORD_REQUIREMENT_ICON_SIZE = 16.dp
+
+        // Spacing
+        val AUTH_SCREEN_TOP_PADDING = 48.dp
+        val AUTH_SCREEN_PADDING = 24.dp
+        val AUTH_SECTION_SPACING = 16.dp
+        val AUTH_SMALL_SPACING = 8.dp
+        val AUTH_REQUIREMENT_SPACING = 4.dp
+        val AUTH_BUTTON_SPACING = 12.dp
+
+        // Loading
+        val LOADING_INDICATOR_SIZE = 20.dp
+        val LOADING_SPACING = 8.dp
+
+        // Alpha
+        const val PASSWORD_REQUIREMENT_OPTIONAL_ALPHA = 0.5f
+        const val PASSWORD_REQUIREMENT_TEXT_ALPHA = 0.6f
     }
 }

@@ -7,6 +7,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.NavType
 import br.pucpr.appdev.gamesapp.screens.*
+import br.pucpr.appdev.gamesapp.screens.auth.ChangeEmailScreen
+import br.pucpr.appdev.gamesapp.screens.auth.ChangePasswordScreen
+import br.pucpr.appdev.gamesapp.screens.auth.EditProfileScreen
+import br.pucpr.appdev.gamesapp.screens.auth.ForgotPasswordScreen
 import br.pucpr.appdev.gamesapp.screens.auth.LoginScreen
 import br.pucpr.appdev.gamesapp.screens.auth.RegisterScreen
 
@@ -21,6 +25,7 @@ class Navigation(private val navController: NavHostController, private val start
             composable(Routes.Login.route) {
                 LoginScreen(
                     onGoRegister = { navController.navigate(Routes.Register.route) },
+                    onForgotPassword = { navController.navigate(Routes.ForgotPassword.route) },
                     onLoggedIn = {
                         navController.navigate(Routes.ListGames.route) {
                             popUpTo(Routes.Login.route) { inclusive = true }
@@ -42,12 +47,25 @@ class Navigation(private val navController: NavHostController, private val start
                 )
             }
 
+            composable(Routes.ForgotPassword.route) {
+                ForgotPasswordScreen(
+                    onBack = { navController.popBackStack() }
+                )
+            }
+
             composable(Routes.ListGames.route) {
                 CallScaffold(topTitle = "Gerenciador de Jogos") { padding ->
                     ListGamesScreen(
                         padding = padding,
                         onAdd = { navController.navigate(Routes.CreateGame.route) },
-                        onEdit = { id -> navController.navigate(Routes.editWithId(id)) }
+                        onEdit = { id -> navController.navigate(Routes.editWithId(id)) },
+                        onEditProfile = { navController.navigate(Routes.EditProfile.route) },
+                        onLogout = {
+                            navController.navigate(Routes.Login.route) {
+                                popUpTo(Routes.ListGames.route) { inclusive = true }
+                                launchSingleTop = true
+                            }
+                        }
                     )
                 }
             }
@@ -79,6 +97,35 @@ class Navigation(private val navController: NavHostController, private val start
                         padding = padding,
                         onDone = { navController.popBackStack() },
                         gameId = gameId
+                    )
+                }
+            }
+
+            composable(Routes.EditProfile.route) {
+                CallScaffold(topTitle = "Gerenciador de Jogos") { padding ->
+                    EditProfileScreen(
+                        padding = padding,
+                        onChangeEmail = { navController.navigate(Routes.ChangeEmail.route) },
+                        onChangePassword = { navController.navigate(Routes.ChangePassword.route) },
+                        onDone = { navController.popBackStack() }
+                    )
+                }
+            }
+
+            composable(Routes.ChangeEmail.route) {
+                CallScaffold(topTitle = "Gerenciador de Jogos") { padding ->
+                    ChangeEmailScreen(
+                        padding = padding,
+                        onDone = { navController.popBackStack() }
+                    )
+                }
+            }
+
+            composable(Routes.ChangePassword.route) {
+                CallScaffold(topTitle = "Gerenciador de Jogos") { padding ->
+                    ChangePasswordScreen(
+                        padding = padding,
+                        onDone = { navController.popBackStack() }
                     )
                 }
             }

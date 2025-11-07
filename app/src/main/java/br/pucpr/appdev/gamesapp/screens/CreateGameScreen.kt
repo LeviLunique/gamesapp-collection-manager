@@ -106,13 +106,20 @@ fun CreateGameScreen(
             onClick = {
                 picker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
             }
-        ) { Text(if (coverUri != null) "Trocar capa (imagem selecionada)" else "Selecionar capa (opcional)") }
+        ) {
+            Text(
+                if (coverUri != null)
+                    stringResource(R.string.action_change_cover)
+                else
+                    stringResource(R.string.action_select_cover)
+            )
+        }
 
         coverUri?.let { uri ->
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp),
+                    .height(Constants.Ui.COVER_PREVIEW_HEIGHT),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
             ) {
                 Box(
@@ -133,7 +140,7 @@ fun CreateGameScreen(
 
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
             OutlinedButton(onClick = onDone) { Text(stringResource(R.string.action_cancel)) }
-            Spacer(Modifier.width(12.dp))
+            Spacer(Modifier.width(Constants.Ui.BUTTON_SPACING))
             Button(onClick = {
                 scope.launch {
                     vm.saveGame(title, platform, rating, status, coverUri)

@@ -59,4 +59,116 @@
     <string name="action_select_all">Selecionar todos</string>
     <string name="action_delete_selected">Excluir selecionados</string>
 
+    <string name="menu_account">Conta</string>
+    <string name="action_edit_profile">Editar perfil</string>
+    <string name="action_logout">Sair</string>
+
+    <!-- Auth Screens -->
+    <string name="auth_login_title">Entrar</string>
+    <string name="auth_register_title">Criar Conta</string>
+    <string name="auth_forgot_password_title">Recuperar Senha</string>
+    <string name="auth_change_email_title">Alterar Email</string>
+    <string name="auth_change_password_title">Alterar Senha</string>
+    <string name="auth_edit_profile_title">Editar Perfil</string>
+
+    <!-- Auth Labels -->
+    <string name="label_email">Email</string>
+    <string name="label_password">Senha</string>
+    <string name="label_current_password">Senha atual</string>
+    <string name="label_new_password">Nova senha</string>
+    <string name="label_confirm_password">Confirmar senha</string>
+    <string name="label_confirm_new_password">Confirmar nova senha</string>
+    <string name="label_new_email">Novo email</string>
+    <string name="label_current_email">Email atual</string>
+    <string name="label_password_for_confirm">Senha atual (para confirmar)</string>
+
+    <!-- Auth Actions -->
+    <string name="action_login">Entrar</string>
+    <string name="action_register">Criar Conta</string>
+    <string name="action_create_account">Criar conta</string>
+    <string name="action_send_reset_link">Enviar Link de Recuperação</string>
+    <string name="action_change_email">Alterar Email</string>
+    <string name="action_change_password">Alterar Senha</string>
+    <string name="action_forgot_password">Esqueci minha senha</string>
+    <string name="action_back_to_login">Voltar para o login</string>
+    <string name="action_send_to_another_email">Enviar para outro email</string>
+    <string name="action_back">Voltar</string>
+
+    <!-- Auth Descriptions -->
+    <string name="auth_app_tagline">Gerencie sua coleção de jogos</string>
+    <string name="auth_register_subtitle">Preencha os dados para se registrar</string>
+    <string name="auth_forgot_password_subtitle">Digite seu email e enviaremos um link para redefinir sua senha</string>
+    <string name="auth_forgot_password_question">Esqueceu sua senha?</string>
+    <string name="auth_email_sent_title">Email Enviado!</string>
+    <string name="auth_verification_email_sent">Enviamos um link de recuperação para:</string>
+    <string name="auth_check_inbox">Verifique sua caixa de entrada e siga as instruções no email para redefinir sua senha.</string>
+    <string name="auth_current_email_label">Email atual: %1$s</string>
+
+    <!-- Auth Questions -->
+    <string name="auth_already_have_account">Já tem uma conta?</string>
+    <string name="auth_dont_have_account">Não tem uma conta?</string>
+
+    <!-- Profile Menu -->
+    <string name="profile_account_section">Conta</string>
+    <string name="profile_settings_section">Configurações</string>
+    <string name="profile_change_email_desc">Trocar endereço de email</string>
+    <string name="profile_change_password_desc">Atualizar sua senha</string>
+
+    <!-- Password Requirements -->
+    <string name="password_requirements_title">Requisitos da senha:</string>
+    <string name="password_requirements_recommended">Recomendado:</string>
+    <string name="password_requirement_min_length">Mínimo 6 caracteres</string>
+    <string name="password_requirement_different">Diferente da senha atual</string>
+    <string name="password_requirement_uppercase">Letra maiúscula</string>
+    <string name="password_requirement_lowercase">Letra minúscula</string>
+    <string name="password_requirement_digit">Número</string>
+    <string name="password_requirement_special">Caractere especial</string>
+
+    <!-- Password Tips -->
+    <string name="password_tips_title">💡 Dicas:</string>
+    <string name="password_tip_check_spam">• Verifique a pasta de spam</string>
+    <string name="password_tip_link_expiry">• O link expira em 1 hora</string>
+    <string name="password_tip_can_resend">• Pode solicitar novamente se necessário</string>
+
+    <!-- Validation Errors -->
+    <string name="error_invalid_email">Email inválido</string>
+    <string name="error_email_required">Digite seu email</string>
+    <string name="error_password_required">Digite sua senha</string>
+    <string name="error_password_too_short">Mínimo 6 caracteres</string>
+    <string name="error_passwords_dont_match">As senhas não coincidem</string>
+    <string name="error_password_same_as_current">A nova senha deve ser diferente da senha atual</string>
+    <string name="error_new_password_required">Digite a nova senha</string>
+    <string name="error_confirm_password_required">Confirme a nova senha</string>
+    <string name="error_current_password_required">Digite sua senha atual</string>
+    <string name="error_new_email_required">Digite o novo email</string>
+    <string name="error_fill_all_fields">Preencha todos os campos</string>
+
+    <!-- Success Messages -->
+    <string name="success_password_changed">Senha alterada com sucesso!</string>
+    <string name="success_verification_email_sent">Email de verificação enviado para %1$s</string>
+
+    <!-- Firebase Errors -->
+    <string name="error_wrong_password">Senha atual incorreta</string>
+    <string name="error_email_or_password_incorrect">Email ou senha incorretos</string>
+    <string name="error_email_already_in_use">Este email já está em uso</string>
+    <string name="error_user_not_found">Nenhuma conta encontrada com este email</string>
+    <string name="error_user_disabled">Esta conta foi desativada</string>
+    <string name="error_too_many_requests">Muitas tentativas. Tente novamente mais tarde</string>
+    <string name="error_weak_password">Senha muito fraca. Use uma senha mais forte</string>
+    <string name="error_network">Erro de conexão. Verifique sua internet</string>
+    <string name="error_unknown">Erro desconhecido</string>
+    <string name="error_send_email">Erro ao enviar email: %1$s</string>
+    <string name="error_generic">Erro: %1$s</string>
+    <string name="error_user_not_authenticated">Usuário não autenticado</string>
+
+    <!-- Content Descriptions -->
+    <string name="cd_show_password">Mostrar senha</string>
+    <string name="cd_hide_password">Ocultar senha</string>
+    <string name="cd_back">Voltar</string>
+
+    <!-- Cover/Image -->
+    <string name="action_select_cover">Selecionar capa (opcional)</string>
+    <string name="action_change_cover">Trocar capa (imagem selecionada)</string>
+    <string name="action_select_new_cover">Selecionar nova capa (opcional)</string>
+
 </resources>

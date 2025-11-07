@@ -18,6 +18,7 @@ import br.pucpr.appdev.gamesapp.base.Constants
 import br.pucpr.appdev.gamesapp.model.GameItem
 import br.pucpr.appdev.gamesapp.model.GameStatus
 import br.pucpr.appdev.gamesapp.model.SortKey
+import br.pucpr.appdev.gamesapp.screens.components.AccountMenu
 import br.pucpr.appdev.gamesapp.screens.components.GameCard
 import br.pucpr.appdev.gamesapp.screens.components.GamesOverflowMenu
 import br.pucpr.appdev.gamesapp.screens.components.SearchField
@@ -29,6 +30,8 @@ fun ListGamesScreen(
     padding: PaddingValues,
     onAdd: () -> Unit,
     onEdit: (String) -> Unit,
+    onEditProfile: () -> Unit,
+    onLogout: () -> Unit,
     vm: ListGamesViewModel = viewModel()
 ) {
     val allGames by vm.games.collectAsState()
@@ -98,9 +101,16 @@ fun ListGamesScreen(
                 TopAppBar(
                     title = { Text(stringResource(R.string.my_games_title_plain)) },
                     navigationIcon = {
-                        IconButton(onClick = { }) {
+                        var accountMenuOpen by remember { mutableStateOf(false) }
+                        IconButton(onClick = { accountMenuOpen = true }) {
                             Icon(Icons.Default.Menu, contentDescription = stringResource(R.string.cd_open_menu))
                         }
+                        AccountMenu(
+                            expanded = accountMenuOpen,
+                            onEditProfile = onEditProfile,
+                            onLogout = onLogout,
+                            onDismiss = { accountMenuOpen = false }
+                        )
                     },
                     actions = {
                         IconButton(onClick = { sortAsc = !sortAsc }) {
@@ -148,7 +158,7 @@ fun ListGamesScreen(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier
-                    .padding(horizontal = Constants.Ui.SCREEN_PADDING, vertical = Constants.Ui.SECTION_SPACING / 2)
+                    .padding(horizontal = Constants.Ui.SCREEN_PADDING, vertical = Constants.Ui.SECTION_SPACING_SMALL)
             )
 
             if (searchOpen) {

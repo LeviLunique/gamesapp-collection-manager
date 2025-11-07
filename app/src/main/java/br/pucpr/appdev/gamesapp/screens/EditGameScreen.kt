@@ -18,7 +18,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.focus.FocusDirection
 import br.pucpr.appdev.gamesapp.base.Constants
@@ -120,14 +119,21 @@ fun EditGameScreen(
 
         OutlinedButton(
             onClick = { picker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) }
-        ) { Text(if (newCoverUri != null) "Trocar capa (imagem selecionada)" else "Selecionar nova capa (opcional)") }
+        ) {
+            Text(
+                if (newCoverUri != null)
+                    stringResource(R.string.action_change_cover)
+                else
+                    stringResource(R.string.action_select_new_cover)
+            )
+        }
 
         val displayImageSource = newCoverUri ?: oldCoverUrl.takeIf { it.isNotBlank() }
         displayImageSource?.let { imageSource ->
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp),
+                    .height(Constants.Ui.COVER_PREVIEW_HEIGHT),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
             ) {
                 Box(
@@ -146,10 +152,10 @@ fun EditGameScreen(
             }
         }
 
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(Constants.Ui.SECTION_SPACING))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
             OutlinedButton(onClick = onDone) { Text(stringResource(R.string.action_cancel)) }
-            Spacer(Modifier.width(12.dp))
+            Spacer(Modifier.width(Constants.Ui.BUTTON_SPACING))
             Button(onClick = {
                 scope.launch {
                     if (!gameId.isNullOrBlank()) {
