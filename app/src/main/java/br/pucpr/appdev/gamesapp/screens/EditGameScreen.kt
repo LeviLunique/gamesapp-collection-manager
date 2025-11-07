@@ -7,6 +7,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -43,10 +45,14 @@ fun EditGameScreen(
     var status by rememberSaveable { mutableStateOf(GameStatus.PLAYING) }
     var oldCoverUrl by remember { mutableStateOf("") }
     var newCoverUri by remember { mutableStateOf<Uri?>(null) }
+    var shouldRemoveCover by remember { mutableStateOf(false) }
 
     val picker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
-    ) { uri -> newCoverUri = uri }
+    ) { uri ->
+        newCoverUri = uri
+        if (uri != null) shouldRemoveCover = false
+    }
 
     LaunchedEffect(gameId) {
         if (!gameId.isNullOrBlank()) {
@@ -56,6 +62,7 @@ fun EditGameScreen(
                 rating = g.rating
                 status = g.status
                 oldCoverUrl = g.coverUrl
+                shouldRemoveCover = false
             }
         }
     }
@@ -118,7 +125,8 @@ fun EditGameScreen(
         )
 
         OutlinedButton(
-            onClick = { picker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) }
+            onClick = { picker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) },
+            modifier = Modifier.fillMaxWidth()
         ) {
             Text(
                 if (newCoverUri != null)
@@ -128,7 +136,12 @@ fun EditGameScreen(
             )
         }
 
-        val displayImageSource = newCoverUri ?: oldCoverUrl.takeIf { it.isNotBlank() }
+        val displayImageSource = when {
+            shouldRemoveCover -> null
+            newCoverUri != null -> newCoverUri
+            oldCoverUrl.isNotBlank() -> oldCoverUrl
+            else -> null
+        }
         displayImageSource?.let { imageSource ->
             Card(
                 modifier = Modifier
@@ -137,17 +150,34 @@ fun EditGameScreen(
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
             ) {
                 Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                    modifier = Modifier.fillMaxSize()
                 ) {
                     AsyncImage(
                         model = imageSource,
                         contentDescription = stringResource(R.string.label_cover_preview),
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clip(MaterialTheme.shapes.medium),
+                        modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
                     )
+
+                    // Delete button overlay
+                    IconButton(
+                        onClick = {
+                            shouldRemoveCover = true
+                            newCoverUri = null
+                        },
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(Constants.Ui.CARD_INTERNAL_SPACING_SM),
+                        colors = IconButtonDefaults.iconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.errorContainer,
+                            contentColor = MaterialTheme.colorScheme.error
+                        )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = stringResource(R.string.action_remove_cover)
+                        )
+                    }
                 }
             }
         }
@@ -159,7 +189,7 @@ fun EditGameScreen(
             Button(onClick = {
                 scope.launch {
                     if (!gameId.isNullOrBlank()) {
-                        vm.updateGame(gameId, title, platform, rating, status, newCoverUri, oldCoverUrl)
+                        vm.updateGame(gameId, title, platform, rating, status, newCoverUri, oldCoverUrl, shouldRemoveCover)
                     }
                     onDone()
                 }

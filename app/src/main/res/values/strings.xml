@@ -175,6 +175,7 @@
     <string name="action_select_cover">Selecionar capa (opcional)</string>
     <string name="action_change_cover">Trocar capa (imagem selecionada)</string>
     <string name="action_select_new_cover">Selecionar nova capa (opcional)</string>
+    <string name="action_remove_cover">Remover capa</string>
 
     <!-- Confirmation Dialogs -->
     <string name="dialog_confirm_email_change_title">Confirmar alteração de email</string>

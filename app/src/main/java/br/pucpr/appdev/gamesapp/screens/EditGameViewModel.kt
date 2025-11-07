@@ -18,14 +18,20 @@ class EditGameViewModel(app: Application) : AndroidViewModel(app) {
         rating: Int,
         status: GameStatus,
         newCover: Uri?,
-        oldCoverUrl: String
+        oldCoverUrl: String,
+        shouldRemoveCover: Boolean = false
     ) {
         try {
-            val coverUrl = if (newCover != null) {
-                storage.deleteCoverIfAny(oldCoverUrl)
-                storage.uploadCover(id, newCover)
-            } else {
-                oldCoverUrl
+            val coverUrl = when {
+                shouldRemoveCover -> {
+                    storage.deleteCoverIfAny(oldCoverUrl)
+                    ""
+                }
+                newCover != null -> {
+                    storage.deleteCoverIfAny(oldCoverUrl)
+                    storage.uploadCover(id, newCover)
+                }
+                else -> oldCoverUrl
             }
 
             repo.upsert(
