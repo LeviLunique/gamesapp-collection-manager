@@ -1,5 +1,6 @@
 package br.pucpr.appdev.gamesapp.model
 
+import br.pucpr.appdev.gamesapp.base.Constants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -8,9 +9,9 @@ class FirestoreGameRepository : IGameRepository {
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    private fun col() = db.collection("users")
+    private fun col() = db.collection(Constants.Firebase.COLLECTION_USERS)
         .document(requireNotNull(auth.currentUser?.uid) { "Usuário não autenticado" })
-        .collection("games")
+        .collection(Constants.Firebase.COLLECTION_GAMES)
 
     override suspend fun list(): List<GameItem> =
         col().orderBy("title").get().await().documents.map { d ->

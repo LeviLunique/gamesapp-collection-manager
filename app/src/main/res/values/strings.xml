@@ -181,6 +181,12 @@
     <string name="dialog_confirm_email_change_message">Tem certeza que deseja alterar seu email de\n\n%1$s\n\npara\n\n%2$s?\n\nVocê receberá um email de verificação no novo endereço.</string>
     <string name="dialog_confirm_password_change_title">Confirmar alteração de senha</string>
     <string name="dialog_confirm_password_change_message">Tem certeza que deseja alterar sua senha?\n\nVocê permanecerá conectado após a alteração.</string>
+    <string name="dialog_confirm_delete_account_title">Excluir Conta</string>
+    <string name="dialog_confirm_delete_account_message">⚠️ ATENÇÃO: Esta ação é irreversível!\n\nTem certeza que deseja excluir permanentemente sua conta?\n\nTodos os seus dados, incluindo jogos salvos, serão perdidos para sempre.</string>
     <string name="action_confirm">Confirmar</string>
+    <string name="action_delete_account">Excluir Conta</string>
+    <string name="profile_delete_account_desc">Remover permanentemente sua conta</string>
+    <string name="error_password_required_to_delete">Digite sua senha para confirmar a exclusão</string>
+    <string name="success_account_deleted">Conta excluída com sucesso</string>
 
 </resources>

@@ -107,6 +107,11 @@ class Navigation(private val navController: NavHostController, private val start
                         padding = padding,
                         onChangeEmail = { navController.navigate(Routes.ChangeEmail.route) },
                         onChangePassword = { navController.navigate(Routes.ChangePassword.route) },
+                        onAccountDeleted = {
+                            navController.navigate(Routes.Login.route) {
+                                popUpTo(0) { inclusive = true }
+                            }
+                        },
                         onDone = { navController.popBackStack() }
                     )
                 }

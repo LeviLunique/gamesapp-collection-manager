@@ -10,6 +10,24 @@ class Constants {
         const val ARG_ID = "id"
     }
 
+    object Firebase {
+        // Firestore Collections
+        const val COLLECTION_USERS = "users"
+        const val COLLECTION_GAMES = "games"
+
+        // Storage Paths
+        const val STORAGE_USERS = "users"
+        const val STORAGE_COVERS = "covers"
+
+        // File Extensions
+        const val COVER_FILE_EXTENSION = ".jpg"
+
+        // Path builders
+        fun userGamesPath(uid: String) = "$COLLECTION_USERS/$uid/$COLLECTION_GAMES"
+        fun userCoversPath(uid: String) = "$STORAGE_USERS/$uid/$STORAGE_COVERS"
+        fun userCoverFilePath(uid: String, docId: String) = "${userCoversPath(uid)}/$docId$COVER_FILE_EXTENSION"
+    }
+
     object Ui {
         // Padding & Spacing
         val SCREEN_PADDING = 16.dp
